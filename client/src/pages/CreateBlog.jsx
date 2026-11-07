@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../api";
 import "./CreateBlog.css";
 
 function CreateBlog() {
@@ -38,15 +39,11 @@ function CreateBlog() {
     setLoading(true);
 
     try {
-      await axios.post(
-        "http://localhost:5000/api/blogs",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await API.post("/blogs", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       navigate("/blogs");
     } catch (error) {

@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import API from "../api";
 import "./BlogDetails.css";
 
 function BlogDetails() {
@@ -36,9 +36,7 @@ function BlogDetails() {
 
   const fetchBlog = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/blogs/${id}`
-      );
+      const response = await API.get(`/blogs/${id}`);
 
       const data = response.data.blog || response.data;
       setBlog(data);
@@ -71,8 +69,8 @@ function BlogDetails() {
     try {
       setSaving(true);
 
-      const response = await axios.put(
-        `http://localhost:5000/api/blogs/${id}`,
+      const response = await API.put(
+        `/blogs/${id}`,
         formData,
         {
           headers: {
@@ -105,14 +103,11 @@ function BlogDetails() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(
-        `http://localhost:5000/api/blogs/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+      await API.delete(`/blogs/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      );
+      });
 
       alert("Blog deleted successfully!");
       navigate("/blogs");

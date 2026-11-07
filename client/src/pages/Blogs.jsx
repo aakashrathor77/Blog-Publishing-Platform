@@ -1,6 +1,7 @@
+
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../api";
 import "./Blogs.css";
 
 function Blogs() {
@@ -13,7 +14,7 @@ function Blogs() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/blogs");
+        const response = await API.get("/blogs");
         setBlogs(response.data.blogs || []);
       } catch (err) {
         setError("Unable to load blogs. Please try again.");
