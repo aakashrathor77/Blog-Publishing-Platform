@@ -1,0 +1,148 @@
+
+const Blog = require("../models/Blog");
+
+// Create Blog
+const createBlog = async (req, res) => {
+  try {
+    const { title, content, excerpt, category, coverImage, tags } = req.body;
+
+    if (!title || !content) {
+      return res.status(400).json({
+        message: "Title and content are required",
+      });
+    }
+
+    const blog = await Blog.create({
+      title,
+      content,
+      excerpt,
+      category,
+      coverImage,
+      tags,
+      author: req.user,
+    });
+
+    res.status(201).json({
+      message: "Blog created successfully",
+      blog,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to create blog",
+    });
+  }
+};
+
+// Get All Blogs
+const getAllBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.find()
+      .populate("author", "name email")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      count: blogs.length,
+      blogs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch blogs",
+    });
+  }
+};
+
+// Get Single Blog
+const getSingleBlog = async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id)
+      .populate("author", "name email");
+
+    if (!blog) {
+      return res.status(404).json({
+        message: "Blog not found",
+      });
+    }
+
+    res.status(200).json({ blog });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch blog",
+    });
+  }
+};
+
+// Update Blog
+const updateBlog = async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+
+    if (!blog) {
+      return res.status(404).json({
+        message: "Blog not found",
+      });
+    }
+
+    if (blog.author.toString() !== req.user) {
+      return res.status(403).json({
+        message: "You are not allowed to update this blog",
+      });
+    }
+
+    const { title, content, excerpt, category, coverImage, tags } = req.body;
+
+    blog.title = title ?? blog.title;
+    blog.content = content ?? blog.content;
+    blog.excerpt = excerpt ?? blog.excerpt;
+    blog.category = category ?? blog.category;
+    blog.coverImage = coverImage ?? blog.coverImage;
+    blog.tags = tags ?? blog.tags;
+
+    await blog.save();
+
+    res.status(200).json({
+      message: "Blog updated successfully",
+      blog,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update blog",
+    });
+  }
+};
+
+// Delete Blog
+const deleteBlog = async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+
+    if (!blog) {
+      return res.status(404).json({
+        message: "Blog not found",
+      });
+    }
+
+    if (blog.author.toString() !== req.user) {
+      return res.status(403).json({
+        message: "You are not allowed to delete this blog",
+      });
+    }
+
+    await blog.deleteOne();
+
+    res.status(200).json({
+      message: "Blog deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete blog",
+    });
+  }
+};
+
+module.exports = {
+  createBlog,
+  getAllBlogs,
+  getSingleBlog,
+  updateBlog,
+  deleteBlog,
+};

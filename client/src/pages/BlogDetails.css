@@ -1,0 +1,62 @@
+
+.edit-blog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  border: 1px solid #eeeaf5;
+}
+
+.edit-blog-form h2 {
+  font-family: Georgia, serif;
+  margin-bottom: 15px;
+}
+
+.edit-blog-form label {
+  font-weight: 700;
+  font-size: 14px;
+  color: #514d61;
+}
+
+.edit-blog-form input,
+.edit-blog-form textarea {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #ddd8ed;
+  border-radius: 8px;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.edit-blog-form textarea {
+  resize: vertical;
+}
+
+.edit-actions,
+.owner-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.edit-actions button,
+.owner-actions button {
+  padding: 12px 22px;
+  border: none;
+  border-radius: 8px;
+  background: #7464df;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.edit-actions .cancel-edit {
+  background: #777386;
+}
+
+.owner-actions .delete-blog-btn {
+  background: #dc3545;
+}
